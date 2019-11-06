@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FolderViewVanila</title>
+</head>
+<body>
+
+<div id="app">
+
+</div>
+
+<button onclick="render()">Refresh</button>
+<button onclick="render(1)">Sort A-Z</button>
+<button onclick="render(-1)">Sort Z-A</button>
+<input id="filterTree">
+
+<script>
+
+    let data = [
+        {
+            "id": 2,
+            "title": "Folder 1",
+            "parentId": -1
+        },
+        {
+            "id": 3,
+            "title": "Test",
+            "parentId": 1
+        },
+        {
+            "id": -1,
+            "title": "Folder 2",
+            "parentId": null
+        },
+        {
+            "id": 1,
+            "title": "Folder 2",
+            "parentId": -1
+        },
+        {
+            "id": 4,
+            "title": "Wrike",
+            "parentId": 2
+        },
+        {
+            "id": 5,
+            "title": "Tester",
+            "parentId": 1
+        }
+    ];
+
+    function buildTree(data) {
+
+        let childrenMap = new Map();
+        let tree = {
+            root: {},
+            nodes: new Map(),
+        };
+
+        data.forEach((item) => {
+            item.filtered = false;
+            tree.nodes.set(item.id, item);
+            if (item.id === -1) {
+                tree.root = item;
+            } else {
+                if (!childrenMap.has(item.parentId)) childrenMap.set(item.parentId, []);
+                childrenMap.get(item.parentId).push(item);
+            }
+
+            if (!childrenMap.has(item.id)) childrenMap.set(item.id, []);
+            item.children = childrenMap.get(item.id);
+
+        });
+
+        return tree;
+    }
+
+    function markParentAsFiltered(tree, node) {
+        let parent = tree.nodes.get(node.parentId);
+
+        if (!parent.filtered) {
+            parent.filtered = true;
+
+            if (parent !== tree.root) markParentAsFiltered(tree, parent);
+        }
+    }
+
+    function filterTree(tree, filter = "") {
+        tree.nodes.forEach((node,id) => {
+           if (!node.filtered) {
+               if (node.title.toLowerCase().includes(filter.toLowerCase())) {
+                   node.filtered = true;
+
+                   markParentAsFiltered(tree, node);
+
+               }
+           }
+        });
+    }
+
+    function renderNode(node) {
+
+        if (!node.filtered) return "";
+
+        let html = "<li>" + node.title;
+        if (node.children.length > 0) {
+            html += "<ul>";
+            html+=node.children.reduce((acc,item) => acc+=renderNode(item),"");
+            html += "</ul>";
+        }
+
+        html += "</li>";
+        return html;
+
+    }
+
+    function renderTree(data, sortDirection = 0, filter = "") {
+
+        console.log(filter);
+        let tree = buildTree(data.slice().sort((a,b) => {
+                if (a.title > b.title)
+                    return sortDirection;
+                if (a.title < b.title)
+                    return -1 * sortDirection;
+                return 0;
+            }));
+
+        filterTree(tree, filter);
+        console.log(tree);
+
+        let html = "<ul>";
+        html += renderNode(tree.root);
+        html += "</ul>";
+
+        return html;
+
+    }
+
+    // let tree = buildTree(data);
+    // console.log(tree);
+
+    function render(sortDirection = 0, filter = "") {
+        document.getElementById("app").innerHTML = renderTree(data, sortDirection, filter);
+    }
+
+    function keyUpHandler(event) {
+        render(0, event.target.value);
+    }
+
+    window.onload = function () {
+        render();
+        document.getElementById("filterTree").addEventListener('keyup', event => keyUpHandler(event))
+    }
+
+
+</script>
+
+</body>
+</html>
