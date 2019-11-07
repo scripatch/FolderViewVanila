@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.fv-list {
+    list-style-type: none;
+    padding-left: 40px;
+
+}
+
+.fv-list.hidden {
+    display: none;
+}
+
+.fv-listItem {
+    cursor:pointer;
+}
+
+li:before {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 4.5px 0 4.5px;
+    border-color: #6f6e6e transparent transparent transparent;
+    position: relative;
+}
