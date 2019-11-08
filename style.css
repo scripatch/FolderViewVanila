@@ -1,27 +1,76 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
+body {
+    font-family: 'SF Pro Display', sans-serif;
+}
+
+#app {
+    padding-left: 5px;
+}
 
 .fv-list {
-    list-style-type: none;
     padding-left: 40px;
-
+    list-style: none;
 }
 
 .fv-list.hidden {
     display: none;
 }
 
-.fv-listItem {
-    cursor:pointer;
+.fv-rootList {
+    margin-top: 10px;
 }
 
-li:before {
+.fv-listItem {
+    cursor: pointer;
+}
+
+.fv-listItem:before {
+    content: "";
+    display: inline-block;
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 6px 4.5px 0 4.5px;
+    border-width: 4px 4px 0 4px;
     border-color: #6f6e6e transparent transparent transparent;
     position: relative;
+    margin-right: 5px;
+    top: -2px;
+}
+
+.fv-listItem.closed:before {
+    border-width: 4px 0 4px 4px;
+    border-color: transparent transparent transparent #6f6e6e;
+}
+
+.fv-btn {
+    margin-top: 5px;
+    background-color: #2f2a2d;
+    padding: 5px 15px;
+    border: 1px solid transparent;
+    color: #fafafa;
+    border-radius: 5px;
+    transition: all ease-in-out .4s;
+    cursor: pointer;
+}
+
+.fv-btn:hover {
+    background-color: #fafafa;
+    color: #2f2a2d;
+    border: 1px solid #2f2a2d;
+}
+
+.fv-filter {
+    margin-top: 5px;
+    background-color: #fafafa;
+    padding: 5px 15px;
+    border: 1px solid #2f2a2d;
+    color: #2f2a2d;
+    border-radius: 5px;
+}
+
+.fv-filter:focus{
+    outline: none;
 }
